@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#0a0e1a"/>
+  <!-- Terminal bracket left -->
+  <path d="M6 10 L2 16 L6 22" stroke="#00ffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Terminal bracket right -->
+  <path d="M26 10 L30 16 L26 22" stroke="#b366ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Cursor / underscore -->
+  <rect x="12" y="19" width="8" height="2" rx="1" fill="#00ffff" opacity="0.9"/>
+  <!-- Dot prompt -->
+  <circle cx="10" cy="14" r="1.5" fill="#00ffff"/>
+  <!-- Short line after prompt -->
+  <line x1="13" y1="14" x2="20" y2="14" stroke="#00ffff" stroke-width="1.8" stroke-linecap="round" opacity="0.6"/>
+</svg>
