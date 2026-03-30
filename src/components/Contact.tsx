@@ -48,25 +48,30 @@ export const Contact = () => {
 							onSubmit={handleSubmit}
 							className='space-y-4'>
 							<div>
-								<label className='block text-xs font-mono text-primary/70 mb-1.5 tracking-widest uppercase'>
+								<label htmlFor='contact-name' className='block text-xs font-mono text-primary/70 mb-1.5 tracking-widest uppercase'>
 									Name
 								</label>
 								<Input
+									id='contact-name'
+									name='name'
 									value={formData.name}
 									onChange={(e) =>
 										setFormData({ ...formData, name: e.target.value })
 									}
 									className='bg-background/50 border-primary/30 font-mono'
 									placeholder='Enter your name...'
+									autoComplete='name'
 									required
 								/>
 							</div>
 
 							<div>
-								<label className='block text-xs font-mono text-primary/70 mb-1.5 tracking-widest uppercase'>
+								<label htmlFor='contact-email' className='block text-xs font-mono text-primary/70 mb-1.5 tracking-widest uppercase'>
 									Email
 								</label>
 								<Input
+									id='contact-email'
+									name='email'
 									type='email'
 									value={formData.email}
 									onChange={(e) =>
@@ -74,15 +79,18 @@ export const Contact = () => {
 									}
 									className='bg-background/50 border-primary/30 font-mono'
 									placeholder='your.email@domain.com'
+									autoComplete='email'
 									required
 								/>
 							</div>
 
 							<div>
-								<label className='block text-xs font-mono text-primary/70 mb-1.5 tracking-widest uppercase'>
+								<label htmlFor='contact-message' className='block text-xs font-mono text-primary/70 mb-1.5 tracking-widest uppercase'>
 									Message
 								</label>
 								<Textarea
+									id='contact-message'
+									name='message'
 									value={formData.message}
 									onChange={(e) =>
 										setFormData({ ...formData, message: e.target.value })

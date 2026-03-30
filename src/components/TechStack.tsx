@@ -107,7 +107,7 @@ export const TechStack = () => {
                       className="w-6 h-6 object-contain"
                       style={{
                         filter:
-                          tech.name === 'Next.js' || tech.name === 'Rust'
+                          tech.name === 'Next.js'
                             ? 'invert(1) brightness(2)'
                             : 'none',
                       }}

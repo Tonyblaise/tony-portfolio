@@ -76,9 +76,13 @@ const experiences: Experience[] = [
 ];
 
 const locationColors: Record<string, string> = {
+  Remote: 'hsl(142 71% 45%)',
   Contract: 'hsl(45 100% 60%)',
   Fellowship: 'hsl(265 100% 65%)',
-  Remote: 'hsl(142 71% 45%)',
+  'Greater London': 'hsl(220 80% 65%)',
+  'United Kingdom': 'hsl(220 80% 65%)',
+  'Texas, US': 'hsl(30 90% 60%)',
+  'Greensboro, NC': 'hsl(30 90% 60%)',
 };
 
 const JourneyItem = ({ exp, index }: { exp: Experience; index: number }) => {
