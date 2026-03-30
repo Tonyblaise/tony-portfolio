@@ -7,7 +7,10 @@
       "Bash(node -e \":*)",
       "Bash(npx sharp-cli:*)",
       "Bash(node:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(npx wrangler:*)",
+      "Bash(wrangler whoami:*)",
+      "Bash(wrangler pages:*)"
     ]
   }
 }
