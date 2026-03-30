@@ -100,6 +100,10 @@ export default {
           "0%, 100%": { boxShadow: "0 0 20px hsl(180 100% 50% / 0.5)" },
           "50%": { boxShadow: "0 0 40px hsl(180 100% 50% / 0.8)" },
         },
+        "slide-up": {
+          "0%": { transform: "translateY(40px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -110,6 +114,7 @@ export default {
         "fade-in": "fade-in 0.8s ease-out",
         "scan-line": "scan-line 8s linear infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "slide-up": "slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both",
       },
       fontFamily: {
         mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],

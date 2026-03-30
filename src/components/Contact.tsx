@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Card } from './ui/card';
+import { useScrollReveal } from '@/hooks/use-scroll-reveal';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
@@ -13,6 +14,10 @@ export const Contact = () => {
     message: '',
   });
 
+  const headingRef = useScrollReveal();
+  const formRef = useScrollReveal<HTMLDivElement>();
+  const socialRef = useScrollReveal<HTMLDivElement>();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast.success('> Message transmitted successfully!');
@@ -24,7 +29,7 @@ export const Contact = () => {
 			id='contact'
 			className='py-24 relative'>
 			<div className='container mx-auto px-4 max-w-4xl'>
-				<div className='text-center mb-16'>
+				<div ref={headingRef} className='text-center mb-16 reveal reveal-up'>
 					<p className='text-xs font-mono text-primary/60 tracking-[0.3em] uppercase mb-3'>
 						Contact
 					</p>
@@ -38,7 +43,7 @@ export const Contact = () => {
 
 				<div className='grid md:grid-cols-2 gap-8'>
 					{/* Contact form */}
-					<Card className='portal-glow bg-card/50 backdrop-blur border-primary/20 p-6'>
+					<Card ref={formRef} className='portal-glow bg-card/50 backdrop-blur border-primary/20 p-6 reveal reveal-left'>
 						<form
 							onSubmit={handleSubmit}
 							className='space-y-4'>
@@ -98,7 +103,7 @@ export const Contact = () => {
 					</Card>
 
 					{/* Social links */}
-					<div className='space-y-4'>
+					<div ref={socialRef} className='space-y-4 reveal reveal-right'>
 						<Card className='portal-glow bg-card/50 backdrop-blur border-primary/20 p-6'>
 							<h3 className='text-base font-bold mb-4 font-mono text-foreground'>
 								Social Links

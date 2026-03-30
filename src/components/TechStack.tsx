@@ -1,6 +1,7 @@
 import { Card } from './ui/card';
 import anchorLogo from '@/assets/anchor-logo.png';
 import cosmwasmLogo from '@/assets/cosmwasm-logo.png';
+import { useScrollReveal, useScrollRevealStagger } from '@/hooks/use-scroll-reveal';
 
 const technologies = [
 	{
@@ -66,10 +67,13 @@ const technologies = [
 ];
 
 export const TechStack = () => {
+  const headingRef = useScrollReveal();
+  const gridRef = useScrollRevealStagger<HTMLDivElement>(70);
+
   return (
     <section id="tech" className="py-24 relative">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div ref={headingRef} className="text-center mb-16 reveal reveal-up">
           <p className="text-xs font-mono text-primary/60 tracking-[0.3em] uppercase mb-3">Arsenal</p>
           <h2 className="text-4xl md:text-5xl font-bold mb-4 terminal-text font-mono">
             Tech Stack
@@ -79,12 +83,11 @@ export const TechStack = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {technologies.map((tech, index) => (
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {technologies.map((tech) => (
             <Card
               key={tech.name}
-              className="portal-glow bg-card/60 backdrop-blur border-border/50 overflow-hidden group cursor-pointer"
-              style={{ animationDelay: `${index * 0.05}s` }}
+              className="portal-glow bg-card/60 backdrop-blur border-border/50 overflow-hidden group cursor-pointer reveal reveal-up"
             >
               {/* Colored top accent */}
               <div

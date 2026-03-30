@@ -1,5 +1,6 @@
 import { Card } from './ui/card';
 import { MapPin, ExternalLink } from 'lucide-react';
+import { useScrollReveal } from '@/hooks/use-scroll-reveal';
 
 interface Experience {
   year: string;
@@ -80,11 +81,93 @@ const locationColors: Record<string, string> = {
   Remote: 'hsl(142 71% 45%)',
 };
 
+const JourneyItem = ({ exp, index }: { exp: Experience; index: number }) => {
+  const cardRef = useScrollReveal();
+  const dotRef = useScrollReveal({ threshold: 0.5 });
+  const isEven = index % 2 === 0;
+
+  return (
+    <div
+      className={`relative flex flex-col md:flex-row gap-6 items-start ${
+        isEven ? 'md:flex-row-reverse' : ''
+      }`}
+    >
+      {/* Timeline dot */}
+      <div
+        ref={dotRef}
+        className="absolute left-8 md:left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-primary ring-4 ring-background z-10 reveal reveal-scale"
+      />
+
+      {/* Card */}
+      <div
+        ref={cardRef}
+        className={`flex-1 ml-16 md:ml-0 ${isEven ? 'md:mr-8' : 'md:ml-8'} reveal ${
+          isEven ? 'reveal-right' : 'reveal-left'
+        }`}
+      >
+        <Card className="portal-glow bg-card/60 backdrop-blur border-border/50 p-5">
+          {/* Header */}
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <span className="font-mono text-xs text-primary/80 bg-primary/10 border border-primary/20 px-2 py-0.5 rounded">
+              {exp.year}
+            </span>
+            <span
+              className="flex items-center gap-1 font-mono text-xs px-2 py-0.5 rounded border"
+              style={{
+                color: locationColors[exp.location] ?? 'hsl(var(--muted-foreground))',
+                borderColor: `${locationColors[exp.location] ?? 'hsl(var(--border))'}40`,
+                backgroundColor: `${locationColors[exp.location] ?? 'transparent'}15`,
+              }}
+            >
+              <MapPin className="w-3 h-3" />
+              {exp.location}
+            </span>
+          </div>
+
+          <h3 className="text-lg font-bold mb-1 font-mono text-foreground">
+            {exp.role}
+          </h3>
+
+          <a
+            href={exp.companyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-sm text-primary/80 hover:text-primary transition-colors mb-3 font-mono"
+          >
+            {exp.company}
+            <ExternalLink className="w-3 h-3" />
+          </a>
+
+          <p className="text-sm text-muted-foreground font-sans leading-relaxed mb-4">
+            {exp.description}
+          </p>
+
+          <div className="flex flex-wrap gap-1.5">
+            {exp.technologies.map((tech) => (
+              <span
+                key={tech}
+                className="px-2.5 py-0.5 text-xs bg-primary/8 border border-primary/20 rounded font-mono text-primary/80"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        </Card>
+      </div>
+
+      {/* Spacer */}
+      <div className="hidden md:block flex-1" />
+    </div>
+  );
+};
+
 export const Journey = () => {
+  const headingRef = useScrollReveal();
+
   return (
     <section id="journey" className="py-24 relative">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div ref={headingRef} className="text-center mb-16 reveal reveal-up">
           <p className="text-xs font-mono text-primary/60 tracking-[0.3em] uppercase mb-3">Experience</p>
           <h2 className="text-4xl md:text-5xl font-bold mb-4 terminal-text font-mono">
             Career Timeline
@@ -100,70 +183,7 @@ export const Journey = () => {
 
           <div className="space-y-10">
             {experiences.map((exp, index) => (
-              <div
-                key={index}
-                className={`relative flex flex-col md:flex-row gap-6 items-start ${
-                  index % 2 === 0 ? 'md:flex-row-reverse' : ''
-                }`}
-              >
-                {/* Timeline dot */}
-                <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-primary ring-4 ring-background z-10" />
-
-                {/* Card */}
-                <div className={`flex-1 ml-16 md:ml-0 ${index % 2 === 0 ? 'md:mr-8' : 'md:ml-8'}`}>
-                  <Card className="portal-glow bg-card/60 backdrop-blur border-border/50 p-5">
-                    {/* Header */}
-                    <div className="flex flex-wrap items-center gap-2 mb-3">
-                      <span className="font-mono text-xs text-primary/80 bg-primary/10 border border-primary/20 px-2 py-0.5 rounded">
-                        {exp.year}
-                      </span>
-                      <span
-                        className="flex items-center gap-1 font-mono text-xs px-2 py-0.5 rounded border"
-                        style={{
-                          color: locationColors[exp.location] ?? 'hsl(var(--muted-foreground))',
-                          borderColor: `${locationColors[exp.location] ?? 'hsl(var(--border))'}40`,
-                          backgroundColor: `${locationColors[exp.location] ?? 'transparent'}15`,
-                        }}
-                      >
-                        <MapPin className="w-3 h-3" />
-                        {exp.location}
-                      </span>
-                    </div>
-
-                    <h3 className="text-lg font-bold mb-1 font-mono text-foreground">
-                      {exp.role}
-                    </h3>
-
-                    <a
-                      href={exp.companyUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-primary/80 hover:text-primary transition-colors mb-3 font-mono"
-                    >
-                      {exp.company}
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-
-                    <p className="text-sm text-muted-foreground font-sans leading-relaxed mb-4">
-                      {exp.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-1.5">
-                      {exp.technologies.map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-2.5 py-0.5 text-xs bg-primary/8 border border-primary/20 rounded font-mono text-primary/80"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </Card>
-                </div>
-
-                {/* Spacer */}
-                <div className="hidden md:block flex-1" />
-              </div>
+              <JourneyItem key={index} exp={exp} index={index} />
             ))}
           </div>
         </div>
@@ -171,3 +191,4 @@ export const Journey = () => {
     </section>
   );
 };
+

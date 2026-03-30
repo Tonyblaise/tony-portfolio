@@ -1,5 +1,6 @@
 import { Card } from './ui/card';
 import { Github } from 'lucide-react';
+import { useScrollReveal, useScrollRevealStagger } from '@/hooks/use-scroll-reveal';
 
 const projects = [
 	{
@@ -46,10 +47,13 @@ const projects = [
 ];
 
 export const Projects = () => {
+  const headingRef = useScrollReveal();
+  const gridRef = useScrollRevealStagger<HTMLDivElement>(90);
+
   return (
     <section id="projects" className="py-24 relative bg-muted/10">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div ref={headingRef} className="text-center mb-16 reveal reveal-up">
           <p className="text-xs font-mono text-primary/60 tracking-[0.3em] uppercase mb-3">Work</p>
           <h2 className="text-4xl md:text-5xl font-bold mb-4 terminal-text font-mono">
             Projects
@@ -59,12 +63,11 @@ export const Projects = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-5xl mx-auto">
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-5xl mx-auto">
           {projects.map((project, index) => (
             <Card
               key={project.title}
-              className="portal-glow bg-card/60 backdrop-blur border-border/50 p-6 group flex flex-col"
-              style={{ animationDelay: `${index * 0.08}s` }}
+              className="portal-glow bg-card/60 backdrop-blur border-border/50 p-6 group flex flex-col reveal reveal-up"
             >
               {/* Header row */}
               <div className="flex items-start justify-between mb-4">

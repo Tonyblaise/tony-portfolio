@@ -125,4 +125,26 @@ All colors MUST be HSL.
   .star {
     animation: twinkle 3s infinite;
   }
+
+  /* ── Scroll-reveal system ── */
+  .reveal {
+    opacity: 0;
+    transition:
+      opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-up    { transform: translateY(36px); }
+  .reveal-left  { transform: translateX(-44px); }
+  .reveal-right { transform: translateX(44px); }
+  .reveal-scale { transform: scale(0.82); }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Respect reduced-motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
 }
