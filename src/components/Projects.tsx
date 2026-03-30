@@ -1,5 +1,5 @@
 import { Card } from './ui/card';
-import { Github } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { useScrollReveal, useScrollRevealStagger } from '@/hooks/use-scroll-reveal';
 
 const projects = [
@@ -79,9 +79,9 @@ export const Projects = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded transition-colors"
-                  aria-label="View on GitHub"
+                  aria-label="Open project"
                 >
-                  <Github className="w-4 h-4" />
+                  <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
 
