@@ -100,7 +100,6 @@ export const TechStack = () => {
                   {/* Icon */}
                   <div
                     className="w-10 h-10 rounded-lg flex items-center justify-center bg-background/80 transition-transform group-hover:scale-110"
-                    style={{ boxShadow: `0 0 12px ${tech.color}30` }}
                   >
                     <img
                       src={typeof tech.logo === 'string' ? tech.logo : tech.logo}

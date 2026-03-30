@@ -75,7 +75,6 @@ All colors MUST be HSL.
   /* Terminal text effects */
   .terminal-text {
     @apply text-[hsl(var(--terminal-cyan))];
-    text-shadow: var(--glow-cyan);
   }
   
   .terminal-prompt {
@@ -84,13 +83,11 @@ All colors MUST be HSL.
   
   /* Portal effects */
   .portal-glow {
-    box-shadow: 0 0 15px hsl(280 80% 60% / 0.2);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .portal-glow:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px hsl(280 80% 60% / 0.4);
   }
   
   /* Glitch effect */

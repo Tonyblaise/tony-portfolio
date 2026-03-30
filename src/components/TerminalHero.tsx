@@ -28,19 +28,9 @@ export const TerminalHero = () => {
 				style={{ backgroundImage: `url(${heroImage})` }}
 			/>
 
-			{/* Gradient overlays */}
-			<div className='absolute inset-0 bg-gradient-to-b from-background/30 via-background/60 to-background' />
-			<div className='absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/80' />
-
-			{/* Subtle grid overlay */}
-			<div
-				className='absolute inset-0 opacity-[0.04]'
-				style={{
-					backgroundImage:
-						'linear-gradient(hsl(180 100% 50% / 1) 1px, transparent 1px), linear-gradient(90deg, hsl(180 100% 50% / 1) 1px, transparent 1px)',
-					backgroundSize: '60px 60px',
-				}}
-			/>
+			{/* Overlays */}
+			<div className='absolute inset-0 bg-background/70' />
+			<div className='absolute inset-0 bg-background/40' />
 
 			<div className='container relative z-10 mx-auto px-4 text-center'>
 				{/* Status badge */}
@@ -58,14 +48,7 @@ export const TerminalHero = () => {
 				<h1
 					className='text-5xl md:text-7xl lg:text-8xl font-bold mb-4 leading-tight tracking-tight font-mono animate-slide-up'
 					style={{ animationDelay: '150ms' }}>
-					<span
-						className='bg-clip-text text-transparent'
-						style={{
-							backgroundImage:
-								'linear-gradient(135deg, hsl(180 100% 50%), hsl(180 100% 70%), hsl(280 80% 70%))',
-						}}>
-						NO-CODE & FULLSTACK
-					</span>
+					<span className='text-primary'>NO-CODE & FULLSTACK</span>
 					<br />
 					<span className='text-foreground/90'>ENGINEER</span>
 				</h1>
@@ -90,7 +73,7 @@ export const TerminalHero = () => {
 					style={{ animationDelay: '450ms' }}>
 					<a
 						href='#journey'
-						className='px-7 py-3 font-mono font-semibold text-sm rounded bg-primary text-primary-foreground hover:opacity-90 hover:shadow-[0_0_24px_hsl(var(--primary)/0.6)] transition-all duration-300'>
+						className='px-7 py-3 font-mono font-semibold text-sm rounded bg-primary text-primary-foreground hover:opacity-90 transition-all duration-300'>
 						View My Work
 					</a>
 					<a
