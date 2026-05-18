@@ -10,7 +10,7 @@ export const Footer = () => {
           <a href="#" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Terminal className="w-4 h-4 text-primary" />
             <span className="font-mono text-sm font-bold text-primary tracking-widest">
-              TONY<span className="text-accent">.254</span>
+              TONY<span className="text-accent">.351</span>
             </span>
           </a>
 

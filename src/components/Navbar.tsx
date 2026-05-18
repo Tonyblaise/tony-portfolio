@@ -60,7 +60,7 @@ export const Navbar = () => {
         >
           <Terminal className="w-4 h-4 text-primary" />
           <span className="font-mono font-bold text-sm tracking-widest text-primary">
-            TONY<span className="text-accent">.254</span>
+            TONY<span className="text-accent">.351</span>
           </span>
         </Link>
 

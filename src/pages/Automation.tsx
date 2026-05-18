@@ -185,7 +185,7 @@ const AutomationPage = () => {
           )}
 
           <div className="mt-16 pt-6 border-t border-border/20 flex justify-between font-mono text-xs text-muted-foreground/40 tracking-widest">
-            <span>{'>_'} TONY.254 :: automation.log</span>
+            <span>{'>_'} TONY.351 :: automation.log</span>
             <span>// {filtered.length} of {AUTOMATION_PROJECTS.length} workflows</span>
           </div>
         </div>

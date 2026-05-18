@@ -249,7 +249,7 @@ const AutomationDetail = () => {
           </div>
 
           <div className="mt-10 pt-6 border-t border-border/20 flex justify-between font-mono text-xs text-muted-foreground/40 tracking-widest">
-            <span>{'>_'} TONY.254 :: automation/{p.id}</span>
+            <span>{'>_'} TONY.351 :: automation/{p.id}</span>
             <span>// {idx + 1} / {AUTOMATION_PROJECTS.length}</span>
           </div>
         </div>
