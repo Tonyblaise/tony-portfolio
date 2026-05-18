@@ -18,10 +18,33 @@ export const Contact = () => {
   const formRef = useScrollReveal<HTMLDivElement>();
   const socialRef = useScrollReveal<HTMLDivElement>();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success('> Message transmitted successfully!');
-    setFormData({ name: '', email: '', message: '' });
+    setSending(true);
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: import.meta.env.VITE_WEB3FORMS_KEY,
+          subject: `Portfolio contact from ${formData.name}`,
+          ...formData,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success('> Message transmitted successfully!');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        toast.error('Transmission failed. Please try again.');
+      }
+    } catch {
+      toast.error('Transmission failed. Please try again.');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -103,9 +126,10 @@ export const Contact = () => {
 
 							<Button
 								type='submit'
-								className='w-full bg-primary text-primary-foreground hover:opacity-90 transition-all duration-300 font-mono text-sm'>
+								disabled={sending}
+								className='w-full bg-primary text-primary-foreground hover:opacity-90 transition-all duration-300 font-mono text-sm disabled:opacity-60'>
 								<Send className='w-4 h-4 mr-2' />
-								Send Message
+								{sending ? 'Transmitting...' : 'Send Message'}
 							</Button>
 						</form>
 					</Card>
