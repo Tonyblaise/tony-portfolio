@@ -1,23 +1,26 @@
 import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Terminal, Menu, X } from 'lucide-react';
 
 const links = [
-  { label: 'Tech', href: '#tech' },
-  { label: 'Journey', href: '#journey' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Tech', href: '/#tech', sectionId: 'tech' },
+  { label: 'Journey', href: '/#journey', sectionId: 'journey' },
+  { label: 'Projects', href: '/#projects', sectionId: 'projects' },
+  { label: 'Contact', href: '/#contact', sectionId: 'contact' },
 ];
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const location = useLocation();
+  const isAutomation = location.pathname.startsWith('/automation');
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 60);
-
-      const sections = links.map((l) => l.href.replace('#', ''));
+      if (isAutomation) return;
+      const sections = links.map((l) => l.sectionId);
       for (const id of [...sections].reverse()) {
         const el = document.getElementById(id);
         if (el && window.scrollY >= el.offsetTop - 120) {
@@ -30,7 +33,7 @@ export const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isAutomation]);
 
   // Close menu on outside click
   useEffect(() => {
@@ -51,20 +54,20 @@ export const Navbar = () => {
       }`}
     >
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <a
-          href="#"
+        <Link
+          to="/"
           className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
         >
           <Terminal className="w-4 h-4 text-primary" />
           <span className="font-mono font-bold text-sm tracking-widest text-primary">
             TONY<span className="text-accent">.254</span>
           </span>
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6">
           {links.map((link) => {
-            const isActive = activeSection === link.href.replace('#', '');
+            const isActive = !isAutomation && activeSection === link.sectionId;
             return (
               <a
                 key={link.href}
@@ -79,8 +82,18 @@ export const Navbar = () => {
               </a>
             );
           })}
+          <Link
+            to="/automation"
+            className={`font-mono text-sm transition-colors relative pb-0.5 ${
+              isAutomation
+                ? 'text-primary after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-primary'
+                : 'text-muted-foreground hover:text-primary'
+            }`}
+          >
+            Automation
+          </Link>
           <a
-            href="#contact"
+            href="/#contact"
             className="font-mono text-sm px-4 py-2 border border-primary/40 text-primary rounded hover:bg-primary/10 hover:border-primary transition-all duration-200"
           >
             Hire Me
@@ -115,8 +128,15 @@ export const Navbar = () => {
               {`> ${link.label}`}
             </a>
           ))}
+          <Link
+            to="/automation"
+            onClick={() => setMenuOpen(false)}
+            className={`block font-mono text-sm py-2.5 border-b border-border/20 transition-colors ${isAutomation ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
+          >
+            {'> Automation'}
+          </Link>
           <a
-            href="#contact"
+            href="/#contact"
             onClick={() => setMenuOpen(false)}
             className="block font-mono text-sm text-primary py-2.5 mt-1"
           >
