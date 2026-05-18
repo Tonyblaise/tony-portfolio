@@ -83,9 +83,9 @@ const AutomationPage = () => {
               Automation <span className="text-foreground/70">Lab</span>
             </h1>
             <p className="text-muted-foreground font-mono text-sm max-w-xl mx-auto leading-relaxed">
-              Production pipelines I've shipped — multi-channel follow-up, document
-              processing, billing reconciliation, and team rituals stitched
-              together with n8n, Zapier, and Make.
+              Production pipelines I've shipped — Zapier integrations, AI content
+              generation, meeting automation, QA workflows, and curriculum tooling
+              built with n8n and Zapier.
             </p>
           </div>
 
