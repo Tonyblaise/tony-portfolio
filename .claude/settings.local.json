@@ -15,7 +15,18 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(curl -s \"https://api.anthropic.com/v1/design/h/QC8hYpKSKCtT780BWZDTQA?open_file=automation.html\")",
+      "Bash(curl -s \"https://api.anthropic.com/v1/design/h/QC8hYpKSKCtT780BWZDTQA?open_file=automation.html\" -H \"Accept-Encoding: identity\")",
+      "Bash(curl -s --compressed \"https://api.anthropic.com/v1/design/h/QC8hYpKSKCtT780BWZDTQA?open_file=automation.html\")",
+      "Bash(curl -s --compressed \"https://api.anthropic.com/v1/design/h/QC8hYpKSKCtT780BWZDTQA?open_file=automation.html\" -H \"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\" -H \"Accept-Encoding: gzip, deflate, br\" -H \"User-Agent: Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/120.0.0.0 Safari/537.36\")",
+      "Bash(curl -v \"https://api.anthropic.com/v1/design/h/QC8hYpKSKCtT780BWZDTQA?open_file=automation.html\")",
+      "Bash(gunzip)",
+      "Bash(tar *)",
+      "Bash(curl -s http://localhost:5175/automation)",
+      "Bash(pkill -f \"vite --port 5175\")",
+      "Bash(xargs cat -n)"
     ]
   }
 }
