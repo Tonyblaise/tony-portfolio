@@ -138,7 +138,7 @@ export const Contact = () => {
 					<div ref={socialRef} className='space-y-4 reveal reveal-right'>
 						<Card className='portal-glow bg-card/50 backdrop-blur border-primary/20 p-6'>
 							<h3 className='text-base font-bold mb-4 font-mono text-foreground'>
-								Social Links
+								Contact
 							</h3>
 							<div className='space-y-3'>
 								<a

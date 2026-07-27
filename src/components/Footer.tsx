@@ -15,7 +15,7 @@ export const Footer = () => {
           </a>
 
           <div className="font-sans text-xs text-muted-foreground/60">
-            © {currentYear} Tony Blaise. Built with React & TypeScript.
+            © {currentYear} Tony Ashiuma. Built with React & TypeScript.
           </div>
 
           <div className="font-mono text-xs text-primary/50 tracking-widest">

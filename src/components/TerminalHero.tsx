@@ -4,7 +4,7 @@ import heroImage from '@/assets/hero-space-terminal.jpg';
 
 export const TerminalHero = () => {
   const [displayText, setDisplayText] = useState('');
-  const fullText = '> Tony Blaise · No-Code & Fullstack Engineer';
+  const fullText = '> Tony Ashiuma · Fullstack Software Engineer / Automation Specialist';
 
   useEffect(() => {
     let index = 0;
@@ -45,11 +45,11 @@ export const TerminalHero = () => {
 
 				{/* Main heading */}
 				<h1
-					className='text-5xl md:text-7xl lg:text-8xl font-bold mb-4 leading-tight tracking-tight font-mono animate-slide-up'
+					className='text-4xl md:text-6xl lg:text-7xl font-bold mb-4 leading-tight tracking-tight font-mono animate-slide-up'
 					style={{ animationDelay: '150ms' }}>
-					<span className='text-primary'>NO-CODE & FULLSTACK</span>
+					<span className='text-primary'>FULLSTACK SOFTWARE ENGINEER</span>
 					<br />
-					<span className='text-foreground/90'>ENGINEER</span>
+					<span className='text-foreground/90'>/ AUTOMATION SPECIALIST</span>
 				</h1>
 
 				{/* Typing line */}
@@ -61,7 +61,7 @@ export const TerminalHero = () => {
 						<span className='cursor inline-block w-2 h-5 bg-primary ml-0.5 align-middle' />
 					</p>
 					<p className='text-sm text-muted-foreground/70 font-sans tracking-wide'>
-						7+ years building across the stack — Bubble.io · React · Next.js · TypeScript · Node.js · Cloudflare Workers
+						4 years fullstack · 2 years building AI agents & automation — Claude Code · n8n · Next.js · NestJS · Python · Cloudflare Workers
 					</p>
 				</div>
 
@@ -70,7 +70,7 @@ export const TerminalHero = () => {
 					className='flex gap-4 justify-center flex-wrap animate-slide-up'
 					style={{ animationDelay: '450ms' }}>
 					<a
-						href='#projects'
+						href='/portfolio'
 						className='px-7 py-3 font-mono font-semibold text-sm rounded bg-primary text-primary-foreground hover:opacity-90 transition-all duration-300'>
 						View My Work
 					</a>

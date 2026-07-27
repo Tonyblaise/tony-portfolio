@@ -1,22 +1,27 @@
 import { Card } from './ui/card';
-import anchorLogo from '@/assets/anchor-logo.png';
-import cosmwasmLogo from '@/assets/cosmwasm-logo.png';
 import { useScrollReveal, useScrollRevealStagger } from '@/hooks/use-scroll-reveal';
 
 const technologies = [
 	{
-		name: 'Bubble',
-		category: 'Framework',
-		logo: 'https://49291ba917ced6f25ff01e5cc5b9a691.cdn.bubble.io/f1756152387519x955902626765069400/Logo%20%281%29.svg',
-		color: 'hsl(210 55% 55%)',
-		description: 'Visual no code platform',
+		name: 'Claude Code',
+		category: 'AI',
+		logo: 'https://cdn.simpleicons.org/claude/D97757',
+		color: 'hsl(16 63% 60%)',
+		description: 'Agentic coding & AI',
 	},
 	{
-		name: 'N8N',
-		category: 'Framework',
+		name: 'n8n',
+		category: 'Automation',
 		logo: 'https://n8niostorageaccount.blob.core.windows.net/n8nio-strapi-blobs-prod/assets/integration_10_97876f19e6.svg',
 		color: 'hsl(344 79% 61%)',
 		description: 'Workflow automation platform',
+	},
+	{
+		name: 'LangChain',
+		category: 'AI',
+		logo: 'https://cdn.simpleicons.org/langchain/5CC8B0',
+		color: 'hsl(168 50% 57%)',
+		description: 'LLM app framework',
 	},
 	{
 		name: 'Next.js',
@@ -25,7 +30,13 @@ const technologies = [
 		color: 'hsl(0 0% 80%)',
 		description: 'React framework',
 	},
-
+	{
+		name: 'React Native',
+		category: 'Mobile',
+		logo: 'https://cdn.simpleicons.org/react/61DAFB',
+		color: 'hsl(193 95% 68%)',
+		description: 'Cross-platform mobile',
+	},
 	{
 		name: 'TypeScript',
 		category: 'Language',
@@ -33,7 +44,13 @@ const technologies = [
 		color: 'hsl(211 60% 48%)',
 		description: 'Type-safe development',
 	},
-
+	{
+		name: 'NestJS',
+		category: 'Backend',
+		logo: 'https://cdn.simpleicons.org/nestjs/E0234E',
+		color: 'hsl(340 83% 47%)',
+		description: 'Progressive Node.js framework',
+	},
 	{
 		name: 'Node.js',
 		category: 'Backend',
@@ -42,27 +59,32 @@ const technologies = [
 		description: 'JavaScript runtime',
 	},
 	{
-		name: 'Postgres',
+		name: 'Python',
+		category: 'Backend',
+		logo: 'https://cdn.simpleicons.org/python/6FA8DC',
+		color: 'hsl(207 51% 55%)',
+		description: 'Backend & scripting',
+	},
+	{
+		name: 'PostgreSQL',
 		category: 'Database',
 		logo: 'https://cdn.simpleicons.org/postgresql/4169E1',
 		color: 'hsl(220 80% 50%)',
 		description: 'Reliable data storage',
 	},
-
 	{
-		name: 'Redis',
+		name: 'Supabase',
 		category: 'Database',
-		logo: 'https://cdn.simpleicons.org/redis/DC382D',
-		color: 'hsl(6 80% 52%)',
-		description: 'In-memory data store',
+		logo: 'https://cdn.simpleicons.org/supabase/3FCF8E',
+		color: 'hsl(153 60% 53%)',
+		description: 'Postgres backend & auth',
 	},
-
 	{
-		name: 'Nest.js',
-		category: 'Backend',
-		logo: 'https://cdn.simpleicons.org/nestjs/E0234E',
-		color: 'hsl(340 83% 47%)',
-		description: 'Progressive Node.js framework',
+		name: 'Cloudflare Workers',
+		category: 'Infrastructure',
+		logo: 'https://cdn.simpleicons.org/cloudflareworkers/F38020',
+		color: 'hsl(28 89% 54%)',
+		description: 'Edge compute',
 	},
 ];
 
@@ -79,7 +101,7 @@ export const TechStack = () => {
             Tech Stack
           </h2>
           <p className="text-muted-foreground font-sans text-sm">
-            Technologies I've mastered across frontend and backend
+            Technologies I use across AI, automation, frontend, and backend
           </p>
         </div>
 

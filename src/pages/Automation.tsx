@@ -4,12 +4,20 @@ import { StarField } from '@/components/StarField';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { useScrollReveal, useScrollRevealStagger } from '@/hooks/use-scroll-reveal';
-import { AUTOMATION_PROJECTS, TOOL_META } from '@/data/automationProjects';
+import { AUTOMATION_PROJECTS, PRODUCT_PROJECTS, TOOL_META } from '@/data/automationProjects';
 
-const TOOLS = ['All', 'n8n', 'Zapier', 'Make'] as const;
+const FILTERS = [
+  'All', 'n8n', 'Zapier', 'Make',
+  'Next.js', 'NestJS', 'Mastra', 'MCP', 'Postgres',
+  'Claude Code', 'Claude Design', 'CopilotKit AG-UI',
+  'React Native', 'Expo',
+] as const;
+
+// Normalize tags/labels so "Next.js" matches "Nextjs", "Nest js" matches "NestJS", etc.
+const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 
 const AutomationPage = () => {
-  const [activeTool, setActiveTool] = useState<string>('All');
+  const [activeFilter, setActiveFilter] = useState<string>('All');
   const [query, setQuery] = useState('');
 
   const headerRef = useScrollReveal();
@@ -39,26 +47,50 @@ const AutomationPage = () => {
       (child as HTMLElement).classList.remove('is-visible');
       setTimeout(() => (child as HTMLElement).classList.add('is-visible'), i * 80);
     });
-  }, [activeTool, query]);
+  }, [activeFilter, query]);
 
-  const counts = useMemo(() => {
-    const c: Record<string, number> = { All: AUTOMATION_PROJECTS.length };
-    AUTOMATION_PROJECTS.forEach((p) => {
-      c[p.tool] = (c[p.tool] || 0) + 1;
-    });
-    return c;
+  // Unified card list — case studies first (flagship builds lead), then product cards.
+  // Each card carries a tag set (for filtering) and a lowercase search haystack.
+  const allCards = useMemo(() => {
+    const AUTOMATION_TOOLS = ['n8n', 'Zapier', 'Make'];
+    const caseStudies = AUTOMATION_PROJECTS.map((project) => ({
+      kind: 'automation' as const,
+      project,
+      tags: project.tags ?? [project.tool],
+      haystack: `${project.name} ${project.short} ${project.tool} ${(project.tags ?? []).join(' ')}`.toLowerCase(),
+    }));
+    const products = PRODUCT_PROJECTS.map((product) => ({
+      kind: 'product' as const,
+      product,
+      tags: product.technologies,
+      haystack: `${product.title} ${product.description} ${product.technologies.join(' ')}`.toLowerCase(),
+    }));
+    // Framework/product work (Next.js, NestJS, Bubble.io, mobile) leads; automation
+    // workflows (n8n / Zapier / Make) go last.
+    const flagship = caseStudies.filter((c) => !AUTOMATION_TOOLS.includes(c.project.tool));
+    const automations = caseStudies.filter((c) => AUTOMATION_TOOLS.includes(c.project.tool));
+    return [...flagship, ...products, ...automations];
   }, []);
 
-  const filtered = AUTOMATION_PROJECTS.filter((p) => {
-    if (activeTool !== 'All' && p.tool !== activeTool) return false;
+  const counts = useMemo(() => {
+    const c: Record<string, number> = { All: allCards.length };
+    for (const f of FILTERS) {
+      if (f === 'All') continue;
+      const nf = norm(f);
+      c[f] = allCards.filter((card) => card.tags.some((t) => norm(t) === nf)).length;
+    }
+    return c;
+  }, [allCards]);
+
+  const q = query.toLowerCase();
+  const activeNorm = norm(activeFilter);
+  const displayCards = allCards.filter((card) => {
+    if (activeFilter !== 'All' && !card.tags.some((t) => norm(t) === activeNorm)) return false;
     if (!query) return true;
-    const q = query.toLowerCase();
-    return (
-      p.name.toLowerCase().includes(q) ||
-      p.short.toLowerCase().includes(q) ||
-      p.tool.toLowerCase().includes(q)
-    );
+    return card.haystack.includes(q);
   });
+
+  const totalCount = allCards.length;
 
   return (
     <div className="min-h-screen relative">
@@ -74,18 +106,18 @@ const AutomationPage = () => {
             <div className="inline-flex items-center gap-2 border border-primary/35 rounded-full px-4 py-1.5 mb-6 text-xs font-mono tracking-widest text-primary">
               <span className="auto-live-dot" />
               <span>{'>_'}</span>
-              <span>AUTOMATION.LOG</span>
+              <span>PORTFOLIO.LOG</span>
             </div>
             <p className="text-xs font-mono text-primary/60 tracking-[0.3em] uppercase mb-3">
               // workflows
             </p>
             <h1 className="text-5xl md:text-7xl font-bold font-mono mb-4 terminal-text tracking-tight leading-none">
-              Automation <span className="text-foreground/70">Lab</span>
+              Selected <span className="text-foreground/70">Work</span>
             </h1>
             <p className="text-muted-foreground font-mono text-sm max-w-xl mx-auto leading-relaxed">
-              Production pipelines I've shipped — Zapier integrations, AI content
-              generation, meeting automation, QA workflows, and curriculum tooling
-              built with n8n and Zapier.
+              Products and automation pipelines I've shipped — full web platforms
+              built on Bubble, Next.js and NestJS, plus Zapier and n8n
+              integrations, AI content generation, and QA workflows.
             </p>
           </div>
 
@@ -97,12 +129,12 @@ const AutomationPage = () => {
                   filter ::
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  {TOOLS.map((t) => (
+                  {FILTERS.map((t) => (
                     <button
                       key={t}
-                      onClick={() => setActiveTool(t)}
+                      onClick={() => setActiveFilter(t)}
                       className={`font-mono text-xs px-3 py-1.5 rounded border transition-all duration-200 inline-flex items-center gap-2 ${
-                        activeTool === t
+                        activeFilter === t
                           ? 'border-primary/70 bg-primary/8 text-primary'
                           : 'border-border/40 text-muted-foreground hover:border-primary/40 hover:text-foreground'
                       }`}
@@ -124,18 +156,69 @@ const AutomationPage = () => {
           </div>
 
           {/* Grid */}
-          {filtered.length === 0 ? (
+          {displayCards.length === 0 ? (
             <div className="text-center py-20 border border-dashed border-border/30 rounded-lg">
               <div className="font-mono text-muted-foreground/60 text-sm">// no projects matched</div>
               <div className="font-mono text-muted-foreground/40 text-xs mt-1">try a different filter or search term</div>
             </div>
           ) : (
             <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {filtered.map((p) => {
-                const globalIdx = AUTOMATION_PROJECTS.indexOf(p);
+              {displayCards.map((card, idx) => {
+                const num = String(idx + 1).padStart(2, '0');
+
+                // Product build — links out to the live site (no detail page).
+                if (card.kind === 'product') {
+                  const prod = card.product;
+                  return (
+                    <a
+                      href={prod.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      key={`product-${prod.title}`}
+                      className="auto-card portal-glow bg-card/60 backdrop-blur border border-border/30 rounded-lg p-7 flex flex-col group relative overflow-hidden reveal reveal-up transition-all duration-200 hover:border-primary/40 hover:bg-card/80"
+                    >
+                      {/* Top border gradient on hover */}
+                      <span className="auto-card-top-line" aria-hidden="true" />
+
+                      <div className="flex items-start justify-between mb-5">
+                        <span className="font-mono text-3xl font-bold text-primary/15 leading-none select-none">
+                          {num}
+                        </span>
+                        <svg
+                          width="20" height="20" viewBox="0 0 20 20" fill="none"
+                          className="text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200"
+                        >
+                          <path d="M6 14 L14 6 M9 6 L14 6 L14 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                        </svg>
+                      </div>
+
+                      <h3 className="font-mono font-semibold text-primary text-lg mb-1 group-hover:text-primary transition-colors leading-tight">
+                        {prod.title}
+                      </h3>
+
+                      <p className="font-mono text-sm text-muted-foreground leading-relaxed mb-5 flex-1">
+                        {prod.description}
+                      </p>
+
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {prod.technologies.map((tech) => (
+                          <span
+                            key={tech}
+                            className="inline-flex items-center border border-secondary/25 bg-secondary/10 rounded px-2 py-0.5 text-xs font-mono text-secondary/80"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </a>
+                  );
+                }
+
+                // Automation case study — internal detail page.
+                const p = card.project;
                 return (
                   <Link
-                    to={`/automation/${p.id}`}
+                    to={`/portfolio/${p.id}`}
                     key={p.id}
                     className="auto-card portal-glow bg-card/60 backdrop-blur border border-border/30 rounded-lg p-7 flex flex-col group relative overflow-hidden reveal reveal-up transition-all duration-200 hover:border-primary/40 hover:bg-card/80"
                   >
@@ -144,7 +227,7 @@ const AutomationPage = () => {
 
                     <div className="flex items-start justify-between mb-5">
                       <span className="font-mono text-3xl font-bold text-primary/15 leading-none select-none">
-                        {String(globalIdx + 1).padStart(2, '0')}
+                        {num}
                       </span>
                       <svg
                         width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -185,8 +268,8 @@ const AutomationPage = () => {
           )}
 
           <div className="mt-16 pt-6 border-t border-border/20 flex justify-between font-mono text-xs text-muted-foreground/40 tracking-widest">
-            <span>{'>_'} TONY.351 :: automation.log</span>
-            <span>// {filtered.length} of {AUTOMATION_PROJECTS.length} workflows</span>
+            <span>{'>_'} TONY.351 :: portfolio.log</span>
+            <span>// {displayCards.length} of {totalCount} projects</span>
           </div>
         </div>
       </main>

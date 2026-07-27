@@ -66,7 +66,7 @@ const Lightbox = ({ src, caption, onClose }: { src: string; caption: string; onC
   );
 };
 
-const ShotFrame = ({ caption, src }: { caption: string; src?: string }) => {
+const ShotFrame = ({ caption, src, portrait = false }: { caption: string; src?: string; portrait?: boolean }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = useCallback(() => { if (src) setOpen(true); }, [src]);
 
@@ -74,7 +74,7 @@ const ShotFrame = ({ caption, src }: { caption: string; src?: string }) => {
     <>
       <div
         className={`auto-shot-frame border border-border/30 rounded-lg bg-card/60 overflow-hidden relative${src ? ' cursor-zoom-in' : ''}`}
-        style={{ aspectRatio: '16/9' }}
+        style={{ aspectRatio: portrait ? '9 / 16' : '16/9' }}
         onClick={handleOpen}
         role={src ? 'button' : undefined}
         tabIndex={src ? 0 : undefined}
@@ -82,13 +82,13 @@ const ShotFrame = ({ caption, src }: { caption: string; src?: string }) => {
         aria-label={src ? `Zoom: ${caption}` : undefined}
       >
         {src ? (
-          <img src={src} alt={caption} className="absolute inset-0 w-full h-full object-cover" style={{ top: 24 }} />
+          <img src={src} alt={caption} className="absolute inset-0 w-full h-full object-cover" style={portrait ? undefined : { top: 24 }} />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center" style={{ top: 24 }}>
             <span className="font-mono text-xs tracking-widest text-muted-foreground/40 uppercase">// drop screenshot</span>
           </div>
         )}
-        <span className="absolute bottom-3 left-4 right-4 font-mono text-xs text-muted-foreground/60">{caption}</span>
+        {!portrait && <span className="absolute bottom-3 left-4 right-4 font-mono text-xs text-muted-foreground/60">{caption}</span>}
       </div>
       {open && src && <Lightbox src={src} caption={caption} onClose={() => setOpen(false)} />}
     </>
@@ -106,10 +106,11 @@ const AutomationDetail = () => {
   const stackRef = useScrollReveal();
   const shotsRef = useScrollReveal();
 
-  if (!p) return <Navigate to="/automation" replace />;
+  if (!p) return <Navigate to="/portfolio" replace />;
 
   const prev = AUTOMATION_PROJECTS[(idx - 1 + AUTOMATION_PROJECTS.length) % AUTOMATION_PROJECTS.length];
   const next = AUTOMATION_PROJECTS[(idx + 1) % AUTOMATION_PROJECTS.length];
+  const isMobile = p.tool === 'Mobile';
 
   return (
     <div className="min-h-screen relative">
@@ -121,10 +122,10 @@ const AutomationDetail = () => {
         <div className="container mx-auto px-4 pt-28 pb-32 max-w-4xl">
 
           <Link
-            to="/automation"
+            to="/portfolio"
             className="inline-flex items-center gap-2 font-mono text-sm text-muted-foreground hover:text-primary transition-colors mb-10"
           >
-            <span className="text-primary">←</span> back to automation
+            <span className="text-primary">←</span> back to portfolio
           </Link>
 
           {/* Header */}
@@ -142,7 +143,7 @@ const AutomationDetail = () => {
             <p className="font-mono text-sm text-muted-foreground leading-relaxed max-w-2xl">
               {p.short}
             </p>
-            <div className="mt-5">
+            <div className="mt-5 flex flex-wrap items-center gap-3">
               <span
                 className="inline-flex items-center gap-1.5 border border-border/40 rounded px-2.5 py-1 text-xs font-mono"
                 style={{ color: TOOL_META[p.tool]?.color ?? 'hsl(var(--primary))' }}
@@ -153,6 +154,19 @@ const AutomationDetail = () => {
                 />
                 {p.tool}
               </span>
+              {p.liveUrl && (
+                <a
+                  href={p.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 font-mono text-xs text-primary hover:text-primary/80 transition-colors"
+                >
+                  Visit site
+                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <path d="M6 14 L14 6 M9 6 L14 6 L14 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </a>
+              )}
             </div>
           </header>
 
@@ -216,12 +230,12 @@ const AutomationDetail = () => {
           {/* Screenshots */}
           <section ref={shotsRef} className="mb-16 reveal reveal-up">
             <p className="font-mono text-xs tracking-[0.22em] uppercase text-primary/70 mb-2">
-              <span className="text-foreground/40 mr-1.5">$</span>04 · screenshots
+              <span className="text-foreground/40 mr-1.5">$</span>04 · {isMobile ? 'app screens' : 'screenshots'}
             </p>
-            <h2 className="font-mono font-semibold text-2xl text-foreground mb-5">Workflow & output</h2>
-            <div className="grid grid-cols-1 gap-4">
+            <h2 className="font-mono font-semibold text-2xl text-foreground mb-5">{isMobile ? 'App screens' : 'Workflow & output'}</h2>
+            <div className={isMobile ? 'grid grid-cols-2 sm:grid-cols-3 gap-4' : 'grid grid-cols-1 gap-4'}>
               {p.shots.map((s, i) => (
-                <ShotFrame key={i} caption={s.caption} src={s.src} />
+                <ShotFrame key={i} caption={s.caption} src={s.src} portrait={isMobile} />
               ))}
             </div>
           </section>
@@ -229,7 +243,7 @@ const AutomationDetail = () => {
           {/* Next / Prev */}
           <div className="mt-24 border-t border-border/20 pt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Link
-              to={`/automation/${prev.id}`}
+              to={`/portfolio/${prev.id}`}
               className="block border border-border/30 rounded-lg bg-card/60 px-6 py-5 portal-glow hover:border-primary/40 hover:bg-card/80 transition-all duration-200"
             >
               <div className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground/50 mb-1.5">
@@ -238,7 +252,7 @@ const AutomationDetail = () => {
               <div className="font-mono text-base text-primary leading-tight">{prev.name}</div>
             </Link>
             <Link
-              to={`/automation/${next.id}`}
+              to={`/portfolio/${next.id}`}
               className="block border border-border/30 rounded-lg bg-card/60 px-6 py-5 portal-glow hover:border-primary/40 hover:bg-card/80 transition-all duration-200 text-right"
             >
               <div className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground/50 mb-1.5">

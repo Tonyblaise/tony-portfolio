@@ -5,7 +5,6 @@ import { Terminal, Menu, X } from 'lucide-react';
 const links = [
   { label: 'Tech', href: '/#tech', sectionId: 'tech' },
   { label: 'Journey', href: '/#journey', sectionId: 'journey' },
-  { label: 'Projects', href: '/#projects', sectionId: 'projects' },
   { label: 'Contact', href: '/#contact', sectionId: 'contact' },
 ];
 
@@ -14,12 +13,12 @@ export const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const location = useLocation();
-  const isAutomation = location.pathname.startsWith('/automation');
+  const isPortfolio = location.pathname.startsWith('/portfolio');
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 60);
-      if (isAutomation) return;
+      if (isPortfolio) return;
       const sections = links.map((l) => l.sectionId);
       for (const id of [...sections].reverse()) {
         const el = document.getElementById(id);
@@ -33,7 +32,7 @@ export const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isAutomation]);
+  }, [isPortfolio]);
 
   // Close menu on outside click
   useEffect(() => {
@@ -67,7 +66,7 @@ export const Navbar = () => {
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6">
           {links.map((link) => {
-            const isActive = !isAutomation && activeSection === link.sectionId;
+            const isActive = !isPortfolio && activeSection === link.sectionId;
             return (
               <a
                 key={link.href}
@@ -83,14 +82,14 @@ export const Navbar = () => {
             );
           })}
           <Link
-            to="/automation"
+            to="/portfolio"
             className={`font-mono text-sm transition-colors relative pb-0.5 ${
-              isAutomation
+              isPortfolio
                 ? 'text-primary after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-primary'
                 : 'text-muted-foreground hover:text-primary'
             }`}
           >
-            Automation
+            Portfolio
           </Link>
           <a
             href="/#contact"
@@ -129,11 +128,11 @@ export const Navbar = () => {
             </a>
           ))}
           <Link
-            to="/automation"
+            to="/portfolio"
             onClick={() => setMenuOpen(false)}
-            className={`block font-mono text-sm py-2.5 border-b border-border/20 transition-colors ${isAutomation ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
+            className={`block font-mono text-sm py-2.5 border-b border-border/20 transition-colors ${isPortfolio ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
           >
-            {'> Automation'}
+            {'> Portfolio'}
           </Link>
           <a
             href="/#contact"

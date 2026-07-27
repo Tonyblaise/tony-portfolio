@@ -18,9 +18,11 @@ export type Screenshot = {
 export type AutomationProject = {
   id: string;
   name: string;
-  tool: 'n8n' | 'Zapier' | 'Make';
+  tool: string;
   status: 'live' | 'idle';
   client?: string;
+  liveUrl?: string;
+  tags?: string[];
   short: string;
   problem: string;
   solution: string;
@@ -31,6 +33,155 @@ export type AutomationProject = {
 };
 
 export const AUTOMATION_PROJECTS: AutomationProject[] = [
+	{
+		id: 'uptime-fleet',
+		name: 'UptimeFleet Rescue Web',
+		tool: 'Full-stack',
+		status: 'live',
+		liveUrl: 'https://uptimefleetrescue.com',
+		tags: ['Next.js', 'NestJS', 'Mastra', 'MCP', 'Claude Design', 'Claude Code'],
+		short:
+			'A roadside-service marketplace that geolocates a breakdown, auto-matches and prices the nearest qualified technician, and dispatches by SMS — with an LLM intake agent and MCP server layered on top of a full Next.js + NestJS platform.',
+		problem:
+			'Roadside dispatch was a manual bottleneck: staff took each request by phone, called around to find the nearest available technician, and hand-quoted pricing. Throughput was capped around 4 jobs a day, and expanding into new towns meant hiring more admin. Every minute of coordination delay is a fleet stuck on the shoulder.',
+		solution:
+			'Built the platform end to end as a Turborepo — a Next.js 16 / React 19 web app and a NestJS 10 API on Prisma 7 + PostGIS (Supabase). A driver starts a request through a guided wizard (SMS-OTP verified) or by texting in; the API writes a PostGIS geopoint and fires an event that runs tiered radius matching (10 → 15 → 23 mi) filtered by vehicle capability, prices each candidate with Mapbox ETA and distance against the provider rate card, auto-bids and auto-awards the best offer, then dispatches over ClickSend SMS with a two-way relay back into per-request threads. On top of that, an LLM intake agent lets clients converse by text to open and auto-assign a request, and an MCP server exposes report and request tools directly inside Claude and GPT. Together these grew throughput from 4 to roughly 15–20 jobs per day and opened new towns with no added admin headcount.',
+		stack: [
+			{ role: 'Monorepo', name: 'Turborepo' },
+			{ role: 'Frontend', name: 'Next.js 16 · React 19' },
+			{ role: 'Backend', name: 'NestJS 10' },
+			{ role: 'Database', name: 'PostgreSQL + PostGIS' },
+			{ role: 'ORM', name: 'Prisma 7 (Supabase)' },
+			{ role: 'Geo', name: 'Mapbox' },
+			{ role: 'Messaging', name: 'ClickSend SMS' },
+			{ role: 'Queue', name: 'BullMQ + Redis' },
+			{ role: 'AI', name: 'LLM intake agent + MCP' },
+			{ role: 'Invoices', name: 'PDFMonkey' },
+		],
+		flow: [
+			{ id: 'request', label: 'Client request', sublabel: 'wizard / SMS / AI agent', type: 'trigger' },
+			{ id: 'api', label: 'NestJS API', sublabel: 'POST /requests', type: 'step' },
+			{ id: 'geo', label: 'PostGIS geopoint', sublabel: 'ST_MakePoint', type: 'step' },
+			{ id: 'match', label: 'Tiered matching', sublabel: '10 → 15 → 23 mi', type: 'branch' },
+			{ id: 'techs', label: 'Nearest techs', sublabel: 'ST_DWithin + capability', type: 'step' },
+			{ id: 'price', label: 'Mapbox', sublabel: 'ETA + pricing → bid', type: 'action' },
+			{ id: 'dispatch', label: 'ClickSend SMS', sublabel: 'dispatch + 2-way relay', type: 'action' },
+			{ id: 'award', label: 'Auto-award', sublabel: 'lowest price · nearest', type: 'action' },
+		],
+		edges: [
+			['request', 'api'],
+			['api', 'geo'],
+			['geo', 'match'],
+			['match', 'techs'],
+			['techs', 'price'],
+			['price', 'dispatch'],
+			['dispatch', 'award'],
+		],
+		shots: [
+			{ caption: 'Command Center — live dispatch board', src: '/shots/uptime-rescue-web-dashboard.png' },
+			{ caption: 'Request detail — bids, ETA & auto-pricing', src: '/shots/uptime-rescue-web-bidding.png' },
+			{ caption: 'Service provider network — 41 active', src: '/shots/uptime-rescue-web-providers.png' },
+			{ caption: 'Service rate card — flat-rate pricing', src: '/shots/uptime-rescue-web-pricing.png' },
+		],
+	},
+	{
+		id: 'uptime-fleet-rescue',
+		name: 'UptimeFleet Rescue Mobile',
+		tool: 'Mobile',
+		status: 'live',
+		liveUrl: 'https://app.uptimefleetrescue.com',
+		tags: ['React Native', 'Expo', 'TypeScript', 'Supabase', 'Claude Design'],
+		short:
+			'The dual-role mobile app for the UptimeFleet roadside platform — technicians go on duty with background location and turn-by-turn navigation to each job, while drivers request service and live-track their technician. Built with Expo and React Native, shipped on the App Store.',
+		problem:
+			'Roadside dispatch is inherently mobile: technicians work from a truck and drivers are stranded at the roadside, yet the platform was web-only. Dispatchers could not see where crews were in real time, technicians had no in-app navigation to a breakdown, and drivers had no way to watch help arriving.',
+		solution:
+			'Built a cross-platform Expo (SDK 56) and React Native app with expo-router and two role-gated experiences resolved from the Supabase user profile. Technicians toggle on duty (opening a shift), receive dispatches pushed through Expo notifications and applied over Supabase Realtime — the backend assigns a job by setting active_request_id — then run a stepped job workflow that writes status back to Postgres and get native turn-by-turn guidance through the Google Navigation SDK. Background location runs in a TaskManager foreground-service task with a 15-minute watchdog that restarts tracking if the OS kills it, throttling position updates to the NestJS API. Drivers request service, watch a realtime bid auction, and live-track the assigned technician on a map with a Google Routes polyline and ETA. Phone and SMS OTP auth, in-app chat with photo messages and presence, and silent OTA updates round it out.',
+		stack: [
+			{ role: 'Framework', name: 'Expo SDK 56 · React Native 0.85' },
+			{ role: 'Language', name: 'TypeScript' },
+			{ role: 'Routing', name: 'expo-router (typed)' },
+			{ role: 'Styling', name: 'NativeWind' },
+			{ role: 'Auth', name: 'Supabase (phone OTP)' },
+			{ role: 'Data', name: 'Supabase Realtime + NestJS API' },
+			{ role: 'Maps / Nav', name: 'Google Navigation SDK' },
+			{ role: 'Location', name: 'expo-location + background tasks' },
+			{ role: 'Push', name: 'expo-notifications' },
+			{ role: 'Updates', name: 'expo-updates (OTA)' },
+		],
+		flow: [
+			{ id: 'push', label: 'Dispatch push', sublabel: 'expo-notifications', type: 'trigger' },
+			{ id: 'app', label: 'Rescue app', sublabel: 'Expo · React Native', type: 'step' },
+			{ id: 'realtime', label: 'Supabase Realtime', sublabel: 'active_request_id', type: 'step' },
+			{ id: 'job', label: 'Job workflow', sublabel: 'stepped state machine', type: 'branch' },
+			{ id: 'nav', label: 'Google Nav SDK', sublabel: 'turn-by-turn + voice', type: 'action' },
+			{ id: 'status', label: 'Status writes', sublabel: 'request → completed', type: 'action' },
+			{ id: 'location', label: 'Background location', sublabel: 'PATCH NestJS API', type: 'action' },
+			{ id: 'track', label: 'Driver live-track', sublabel: 'map + ETA', type: 'action' },
+		],
+		edges: [
+			['push', 'app'],
+			['app', 'realtime'],
+			['realtime', 'job'],
+			['job', 'nav'],
+			['job', 'status'],
+			['job', 'location'],
+			['realtime', 'track'],
+		],
+		shots: [
+			{ caption: 'Technician · guided active-job workflow', src: '/shots/uptime-rescue-tech-job.png' },
+			{ caption: 'Technician · turn-by-turn navigation', src: '/shots/uptime-rescue-tech-nav.png' },
+			{ caption: 'Technician · on-duty standby', src: '/shots/uptime-rescue-tech-standby.png' },
+			{ caption: 'Driver · live technician tracking', src: '/shots/uptime-rescue-driver-track.png' },
+			{ caption: 'Driver · choose the service', src: '/shots/uptime-rescue-driver-choose.png' },
+			{ caption: 'Driver · in-app messaging', src: '/shots/uptime-rescue-driver-message.png' },
+		],
+	},
+	{
+		id: 'draft-line',
+		name: 'Draftsline',
+		tool: 'Agentic AI',
+		status: 'live',
+		liveUrl: 'https://draftsline.app',
+		tags: ['Next.js', 'Postgres', 'Mastra', 'Claude Design', 'CopilotKit AG-UI'],
+		short:
+			'An agentic SEO writing tool that takes a keyword through brief → outline → draft → human QA → publish, writing every article in a per-brand voice — cutting a polished article from 6+ hours to under 15 minutes.',
+		problem:
+			'Producing a publish-ready SEO article took 6+ hours and drifted off-brand: every writer interpreted tone, structure, and readability targets differently, and keeping voice consistent across a content team was near impossible to enforce by hand.',
+		solution:
+			'Built a chat-driven pipeline in Next.js 16 with a CopilotKit / AG-UI interface wired to Mastra agents running in-process — 29 SEO skills (brief, outline, write, audit, schema, factcheck, clustering, localization…) plus a five-agent researcher → writer → SEO → reviewer → translator pipeline. Claude is the primary model with automatic OpenAI failover through the AI SDK. The build adds durable chat threads, streaming with a collapsible extended-thinking view, and tool-driven generative UI (stepped forms, approval gates, downloadable document previews). A per-project voice system scopes every draft to a brand persona and enforces numeric quality targets (Flesch score, sentence length, taboo phrases) at a QA gate. Threads persist to Postgres via Mastra, article and persona data through Prisma, and rendered HTML plus assets to Cloudflare R2, all behind Clerk auth.',
+		stack: [
+			{ role: 'Framework', name: 'Next.js 16 · React 19' },
+			{ role: 'Agents', name: 'Mastra (in-process)' },
+			{ role: 'Agentic UI', name: 'CopilotKit / AG-UI' },
+			{ role: 'AI', name: 'Claude + OpenAI (AI SDK)' },
+			{ role: 'Database', name: 'Postgres + Prisma' },
+			{ role: 'Storage', name: 'Cloudflare R2' },
+			{ role: 'Auth', name: 'Clerk' },
+			{ role: 'Infra', name: 'Docker · Railway' },
+		],
+		flow: [
+			{ id: 'keyword', label: 'Keyword / chat', sublabel: 'user brief', type: 'trigger' },
+			{ id: 'ui', label: 'CopilotKit UI', sublabel: 'AG-UI stream', type: 'step' },
+			{ id: 'runtime', label: 'CopilotKit runtime', sublabel: 'Clerk-gated /api', type: 'step' },
+			{ id: 'agents', label: 'Mastra agents', sublabel: 'brief → draft → QA', type: 'branch' },
+			{ id: 'claude', label: 'Claude', sublabel: 'primary model', type: 'action' },
+			{ id: 'openai', label: 'OpenAI', sublabel: 'failover', type: 'action' },
+			{ id: 'persist', label: 'Postgres · R2', sublabel: 'threads, article, assets', type: 'action' },
+		],
+		edges: [
+			['keyword', 'ui'],
+			['ui', 'runtime'],
+			['runtime', 'agents'],
+			['agents', 'claude'],
+			['agents', 'openai'],
+			['agents', 'persist'],
+		],
+		shots: [
+			{ caption: 'Chat pipeline — keyword to draft' },
+			{ caption: 'Brand voice & QA gate' },
+		],
+	},
 	{
 		id: 'proline-zapier',
 		name: 'ProLine Zapier — Triggers & Actions',
@@ -699,4 +850,46 @@ export const TOOL_META: Record<string, { color: string; label: string }> = {
   n8n: { color: '#ea4b71', label: 'n8n' },
   Zapier: { color: '#ff4f00', label: 'Zapier' },
   Make: { color: '#6d3ad6', label: 'Make' },
+  'Full-stack': { color: '#0EA5E9', label: 'Full-stack' },
+  'Agentic AI': { color: '#D97757', label: 'Agentic AI' },
+  Mobile: { color: '#22C55E', label: 'Mobile' },
 };
+
+// Product/app builds shown on the /portfolio page alongside the automation
+// case studies. These link out to their live site (no internal detail page).
+export type ProductProject = {
+  title: string;
+  description: string;
+  technologies: string[];
+  href: string;
+};
+
+export const PRODUCT_PROJECTS: ProductProject[] = [
+  {
+    title: 'Proline',
+    description:
+      'ProLine is a CRM built specifically for roofers — it automates sales follow-ups, quotes, invoicing, and scheduling to help them close more jobs with less admin work.',
+    technologies: ['Bubble.io', 'Cloudflare workers'],
+    href: 'https://useproline.com/',
+  },
+  {
+    title: 'MortgageBloc V2',
+    description: 'Rebuilt the mgb platform in Next js',
+    technologies: ['Nestjs', 'Nextjs'],
+    href: 'https://www.mgb.ai/',
+  },
+  {
+    title: 'Watatu Travel',
+    description:
+      'Watatu is an adventure travel marketplace connecting travellers and hikers through individual and group experiences. It offers curated tour packages with various destinations, pricing, timelines, and stay options — covering everything from mountain hikes to hotel experiences across global properties.',
+    technologies: ['Bubble', 'Airtable'],
+    href: 'https://book.watatutravel.com/',
+  },
+  {
+    title: 'DonatePlus',
+    description:
+      'DonatePlus connects donors and schools through campaigns and streamlines content. I built the application using Adalo and the landing page using bubble.',
+    technologies: ['Bubble', 'Glide'],
+    href: 'https://donateplus.co/',
+  },
+];

@@ -14,75 +14,74 @@ interface Experience {
 
 const experiences: Experience[] = [
 	{
-		year: 'Jun 2025 – Present',
-		role: 'Software Engineer',
-		company: 'ProLine',
-		companyUrl: 'https://useproline.com/',
-		location: 'Remote',
+		year: 'Jun 2024 – Present',
+		role: 'Automation Engineer & Fullstack Software Engineer',
+		company: 'Uptime Fleet',
+		companyUrl: 'https://uptimefleet.com',
+		location: 'Houston, TX',
 		description:
-			'Building and maintaining software solutions at ProLine, contributing to full-stack development across web platforms.',
-		technologies: ['React', 'Next.js', 'Bubble.io', 'Node.js'],
+			'Designed and shipped an LLM-driven AI intake agent — clients text the company number, the agent collects details, creates the request, and auto-assigns the nearest technician — growing throughput from 4 to ~15–20 jobs/day. Built an MCP server adopted by hundreds of fleet managers, and architected the NestJS backend plus a React Native mobile app.',
+		technologies: ['NestJS', 'React Native', 'n8n', 'MCP', 'TypeScript'],
+	},
+	{
+		year: '2026',
+		role: 'Freelance Agentic AI Engineer',
+		company: 'Draft Line',
+		companyUrl: '',
+		location: 'Freelance',
+		description:
+			'Built Draft Line, an agentic SEO writing tool that cut polished-article time from over 6 hours to under 15 minutes. Next.js + CopilotKit (AG-UI) frontend wired to Mastra agents on a NestJS backend, with durable chat threads, streaming tool-driven UI, Prisma/Postgres, and Anthropic + OpenAI models via the AI SDK.',
+		technologies: ['Next.js', 'Mastra', 'CopilotKit', 'NestJS', 'Postgres'],
 	},
 	{
 		year: 'Feb 2022 – May 2025',
-		role: 'Senior Bubble Developer & React Engineer',
-		company: 'MORTGAGEBLOC',
+		role: 'Automation Engineer & Fullstack Developer',
+		company: 'MortgageBloc',
 		companyUrl: 'https://mortgagebloc.com',
 		location: 'Greater London',
 		description:
-			'Led development of mortgage industry web applications using Bubble.io and React/Next.js. Delivered scalable no-code and custom-code solutions for complex financial workflows over a 3+ year engagement.',
-		technologies: ['React', 'Next.js', 'Bubble.io', 'TypeScript'],
+			'Built n8n pipelines for borrower document follow-up (escalating email/SMS reminders that cut turnaround from ~3 weeks to a few days) and automated verification that flagged discrepancies before underwriting. Prototyped mgb.ai to reach market ~3x faster, then helped lead the full rebuild in Next.js, NestJS, and TypeScript.',
+		technologies: ['n8n', 'Next.js', 'NestJS', 'TypeScript'],
 	},
 	{
 		year: 'Jul 2022 – Feb 2023',
-		role: 'Senior Bubble Developer & Plugin Developer',
+		role: 'Senior Developer',
 		company: 'Goodspeed Studio',
 		companyUrl: 'https://goodspeed.studio',
 		location: 'United Kingdom',
 		description:
-			'Built custom Bubble.io applications and developed proprietary Bubble plugins, extending platform capabilities for client projects.',
-		technologies: ['Bubble.io', 'JavaScript', 'React', 'REST APIs'],
+			'Built custom JavaScript plugins to extend platform functionality beyond native limits, and delivered multiple fullstack applications end to end — owning architecture, build, and launch across each project.',
+		technologies: ['JavaScript', 'React', 'REST APIs'],
 	},
 	{
 		year: 'Sep 2020 – Jun 2022',
-		role: 'Senior Bubble Developer',
+		role: 'Senior Developer',
 		company: 'InnoVetted',
 		companyUrl: 'https://www.linkedin.com/company/innovetted/',
-		location: 'Texas, US',
+		location: 'Texas, USA',
 		description:
-			'Designed and developed web applications on Bubble.io for clients across various industries, delivering tailored no-code solutions for business automation and data management.',
-		technologies: ['Bubble.io', 'Airtable', 'JavaScript', 'REST APIs'],
-	},
-	{
-		year: 'Oct 2020 – Feb 2022',
-		role: 'Web Bubble Developer',
-		company: 'Onyx Ocean Technologies',
-		companyUrl: 'https://onyxocean.com',
-		location: 'Greensboro, NC',
-		description:
-			'Developed programs from the ground up using Bubble.io, delivering full web applications tailored to client specifications.',
-		technologies: ['Bubble.io', 'JavaScript', 'REST APIs'],
+			'Helped build Award Pool from scratch — a product that went on to raise $2M in funding — and built and launched 5+ production-grade applications end to end, from initial scope through to live deployment.',
+		technologies: ['React', 'JavaScript', 'REST APIs'],
 	},
 	{
 		year: 'Oct 2018 – Jun 2022',
-		role: 'Freelance Bubble Developer',
-		company: 'Fiverr',
+		role: 'Freelance Developer',
+		company: 'Fiverr & Onyx Ocean Technologies',
 		companyUrl: 'https://www.fiverr.com/bubba254',
 		location: 'Remote',
 		description:
-			'Delivered Bubble.io web applications to clients worldwide as a top-rated freelancer, building custom solutions for small businesses and startups across a wide range of industries.',
-		technologies: ['Bubble.io', 'Airtable', 'FlutterFlow', 'REST APIs'],
+			'Delivered web applications and integrated systems for clients across multiple industries, managing full build cycles from requirements through to deployment.',
+		technologies: ['JavaScript', 'React', 'REST APIs'],
 	},
 ];
 
 const locationColors: Record<string, string> = {
   Remote: 'hsl(142 71% 45%)',
-  Contract: 'hsl(45 100% 60%)',
-  Fellowship: 'hsl(265 100% 65%)',
+  Freelance: 'hsl(265 100% 65%)',
+  'Houston, TX': 'hsl(30 90% 60%)',
   'Greater London': 'hsl(220 80% 65%)',
   'United Kingdom': 'hsl(220 80% 65%)',
-  'Texas, US': 'hsl(30 90% 60%)',
-  'Greensboro, NC': 'hsl(30 90% 60%)',
+  'Texas, USA': 'hsl(30 90% 60%)',
 };
 
 const JourneyItem = ({ exp, index }: { exp: Experience; index: number }) => {
@@ -132,15 +131,21 @@ const JourneyItem = ({ exp, index }: { exp: Experience; index: number }) => {
             {exp.role}
           </h3>
 
-          <a
-            href={exp.companyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-sm text-primary/80 hover:text-primary transition-colors mb-3 font-mono"
-          >
-            {exp.company}
-            <ExternalLink className="w-3 h-3" />
-          </a>
+          {exp.companyUrl ? (
+            <a
+              href={exp.companyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-sm text-primary/80 hover:text-primary transition-colors mb-3 font-mono"
+            >
+              {exp.company}
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          ) : (
+            <span className="inline-flex items-center gap-1 text-sm text-primary/80 mb-3 font-mono">
+              {exp.company}
+            </span>
+          )}
 
           <p className="text-sm text-muted-foreground font-sans leading-relaxed mb-4">
             {exp.description}
@@ -177,7 +182,7 @@ export const Journey = () => {
             Career Timeline
           </h2>
           <p className="text-muted-foreground font-sans text-sm">
-            5 years building products across fintech, DeFi, and blockchain infrastructure
+            From fullstack web apps to LLM agents and automation systems
           </p>
         </div>
 
