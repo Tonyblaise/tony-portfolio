@@ -150,13 +150,13 @@ export const Contact = () => {
 									</span>
 								</a>
 								<a
-									href='https://github.com/iamtonyblaise'
+									href='https://github.com/tonyblaise/'
 									target='_blank'
 									rel='noopener noreferrer'
 									className='flex items-center gap-3 p-3 hover:bg-primary/10 rounded transition-colors group'>
 									<Github className='w-5 h-5 text-primary' />
 									<span className='font-mono text-sm group-hover:text-primary transition-colors'>
-										github.com/iamtonyblaise
+										github.com/tonyblaise
 									</span>
 								</a>
 								<a
